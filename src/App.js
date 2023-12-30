@@ -1,28 +1,4 @@
-import React from "react";
-
-const generateRandomString = (length) => {
-  const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const values = crypto.getRandomValues(new Uint8Array(length));
-  return values.reduce((acc, x) => acc + possible[x % possible.length], "");
-};
-
-const codeVerifier = generateRandomString(64);
-
-const sha256 = async (plain) => {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(plain);
-  return window.crypto.subtle.digest("SHA-256", data);
-};
-
-const base64encode = (input) => {
-  return btoa(String.fromCharCode(...new Uint8Array(input)))
-    .replace(/=/g, "")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_");
-};
-
-const hashed = await sha256(codeVerifier);
-const codeChallenge = base64encode(hashed);
+import React, { useEffect } from "react";
 
 const clientId = "2ee310db67664234992f32fce570ff74";
 const redirectUri = "http://localhost:3000";
@@ -30,48 +6,59 @@ const redirectUri = "http://localhost:3000";
 const scope = "user-read-private user-read-email";
 const authUrl = new URL("https://accounts.spotify.com/authorize");
 
-// generated in the previous step
-window.localStorage.setItem("code_verifier", codeVerifier);
+const App = () => {
+  useEffect(() => {
+    const initiateAuthorization = async () => {
+      try {
+        const codeVerifier = "b0eiUU9jWgDJ2P35FGAWoWZtxzc-LVv89eaX9DdN-OI"; // Replace with your actual code challenge value
 
-const params = {
-  response_type: "code",
-  client_id: clientId,
-  scope,
-  code_challenge_method: "S256",
-  code_challenge: codeChallenge,
-  redirect_uri: redirectUri,
+        const sha256 = async (plain) => {
+          const encoder = new TextEncoder();
+          const data = encoder.encode(plain);
+          const hashedBuffer = await crypto.subtle.digest("SHA-256", data);
+          const hashedArray = Array.from(new Uint8Array(hashedBuffer));
+          return hashedArray.map((byte) => String.fromCharCode(byte)).join("");
+        };
+
+        const base64encode = (input) => {
+          const encoded = btoa(input);
+          return encoded.replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+        };
+
+        const hashed = await sha256(codeVerifier);
+        const codeChallenge = base64encode(hashed);
+
+        const params = new URLSearchParams({
+          response_type: "code",
+          client_id: clientId,
+          scope,
+          code_challenge_method: "S256",
+          code_challenge: codeChallenge,
+          redirect_uri: redirectUri,
+        });
+
+        authUrl.search = params.toString();
+        window.location.href = authUrl.toString();
+      } catch (error) {
+        console.error("Error during authorization initiation:", error);
+      }
+    };
+
+    initiateAuthorization(); // Call the async function immediately
+  }, []);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+
+    if (code) {
+      // The user has granted access, and the authorization code is present
+      // You can proceed to exchange the authorization code for an access token
+      // getToken(code);
+    }
+  }, []); // Empty dependency array to run the effect only once
+
+  return <div></div>;
 };
 
-authUrl.search = new URLSearchParams(params).toString();
-window.location.href = authUrl.toString();
-
-const urlParams = new URLSearchParams(window.location.search);
-let code = urlParams.get("code");
-
-const getToken = async (code) => {
-  // stored in the previous step
-  let codeVerifier = localStorage.getItem("code_verifier");
-
-  const payload = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({
-      client_id: clientId,
-      grant_type: "authorization_code",
-      code,
-      redirect_uri: redirectUri,
-      code_verifier: codeVerifier,
-    }),
-  };
-
-  const body = await fetch(url, payload);
-  const response = await body.json();
-
-  localStorage.setItem("access_token", response.access_token);
-};
-
-export default function App() {
-  return <div>My App</div>;
-}
+export default App;
