@@ -29,7 +29,7 @@ const ArtistBio = (props) => {
       })
       .catch((error) => {
         console.error('Error fetching data: ', error);
-        setBio('Error fetching bio.');
+        setBio('Error fetching biography.');
       });
   }, [props.searchKey]); // Re-run effect if bandName changes
 

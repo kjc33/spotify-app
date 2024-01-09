@@ -159,7 +159,7 @@ function App() {
         <div className="popular-songs-list">
           <ul>
             {topTracks.slice(0, Math.ceil(topTracks.length / 2)).map((track) => (
-              <li key={track.id}>{track.name}</li>
+              <li key={track.id}>"{track.name}"</li>
             ))}
           </ul>
           <ul>
@@ -192,18 +192,20 @@ function App() {
         {token && <button onClick={logout}>Logout</button>}
         {token ? (
           <form onSubmit={searchArtists} id="search-form">
-            <input type="text" placeholder="Artist Name" name="search" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
-            {searchKey && (
-              <button type="button" onClick={clearSearch}>
-                X
-              </button>
-            )}
+            <div className="search-container">
+              <input type="text" placeholder="Artist Name" name="search" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
+              {searchKey && (
+                <button type="button" onClick={clearSearch}>
+                  X
+                </button>
+              )}
+            </div>
             <button type="submit">Search</button>
           </form>
         ) : (
           <button onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}>Login to Spotify</button>
         )}
-        {loading ? <p>Loading...</p> : null}
+        {loading && <p>Loading...</p>}
         {renderArtists()}
         {searchSubmitted && <ArtistBio searchKey={searchKey} />}
       </section>
