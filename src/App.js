@@ -38,10 +38,15 @@ function App() {
 
   const logout = () => {
     setToken("");
-    setArtists([]);
     setSearchKey("");
-    setSearchSubmitted(false); // Reset searchSubmitted state
+    setArtists([]);
+    setSearchSubmitted(false);
     window.localStorage.removeItem("token");
+  };
+
+  const clearSearch = () => {
+    setSearchKey("");
+    setSearchSubmitted(false);
   };
 
   const searchArtists = async (e) => {
@@ -63,7 +68,6 @@ function App() {
 
         setArtists(data.artists.items);
       } else {
-        // Handle the case when the search query is empty
         setArtists([]);
       }
     } catch (error) {
@@ -149,11 +153,11 @@ function App() {
           <img width={"100%"} src={artist.images[0].url} alt="" />
         </div>
         <h2 className="artist-name">{artist.name}</h2>
-        <p className="genres">
-          <strong>Genres:</strong> {artistGenres}
-        </p>
         <p className="followers">
           <strong>Followers:</strong> {numberWithCommas(artistFollowers)}
+        </p>
+        <p className="genres">
+          <strong>Genres:</strong> {artistGenres}
         </p>
         <h3 className="popular-songs">Popular Songs</h3>
         <div className="popular-songs-list">
@@ -164,17 +168,12 @@ function App() {
           </ul>
           <ul>
             {topTracks.slice(Math.ceil(topTracks.length / 2)).map((track) => (
-              <li key={track.id}>{track.name}</li>
+              <li key={track.id}>"{track.name}"</li>
             ))}
           </ul>
         </div>
       </div>
     );
-  };
-
-  const clearSearch = () => {
-    setSearchKey("");
-    setSearchSubmitted(false);
   };
 
   const capitalizeFirstLetter = (str) => {
@@ -205,7 +204,7 @@ function App() {
         ) : (
           <button onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}>Login to Spotify</button>
         )}
-        {loading && <p>Loading...</p>}
+        {loading ? <p>Loading...</p> : null}
         {renderArtists()}
         {searchSubmitted && <ArtistBio searchKey={searchKey} />}
       </section>
