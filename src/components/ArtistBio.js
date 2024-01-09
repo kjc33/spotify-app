@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 const ArtistBio = (props) => {
   const [bio, setBio] = useState("Loading...");
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const apiUrl = 'https://en.wikipedia.org/w/api.php?';
@@ -25,13 +24,11 @@ const ArtistBio = (props) => {
         if (pageId !== "-1" && pages[pageId].extract) {
           setBio(pages[pageId].extract);
         } else {
-          setBio('No bio found.');
+          setBio('Sorry, no biography found.');
         }
-        setLoading(false);
       })
       .catch((error) => {
         console.error('Error fetching data: ', error);
-        setLoading(false);
         setBio('Error fetching bio.');
       });
   }, [props.searchKey]); // Re-run effect if bandName changes

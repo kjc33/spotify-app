@@ -149,11 +149,11 @@ function App() {
           <img width={"100%"} src={artist.images[0].url} alt="" />
         </div>
         <h2 className="artist-name">{artist.name}</h2>
-        <p className="followers">
-          <strong>Followers:</strong> {numberWithCommas(artistFollowers)}
-        </p>
         <p className="genres">
           <strong>Genres:</strong> {artistGenres}
+        </p>
+        <p className="followers">
+          <strong>Followers:</strong> {numberWithCommas(artistFollowers)}
         </p>
         <h3 className="popular-songs">Popular Songs</h3>
         <div className="popular-songs-list">
@@ -195,7 +195,7 @@ function App() {
             <input type="text" placeholder="Artist Name" name="search" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
             {searchKey && (
               <button type="button" onClick={clearSearch}>
-                Clear
+                X
               </button>
             )}
             <button type="submit">Search</button>
