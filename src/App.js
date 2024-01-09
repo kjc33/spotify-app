@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+import ArtistBio from "./components/ArtistBio";
+
 function App() {
   const CLIENT_ID = "2ee310db67664234992f32fce570ff74";
   const REDIRECT_URI = "http://localhost:3000";
@@ -37,6 +39,7 @@ function App() {
   const logout = () => {
     setToken("");
     setArtists([]);
+    setSearchKey("");
     setSearchSubmitted(false); // Reset searchSubmitted state
     window.localStorage.removeItem("token");
   };
@@ -120,10 +123,6 @@ function App() {
     fetchTopTracks();
   }, [artists, token]);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
   const renderArtists = () => {
     if (!searchKey || (!searchSubmitted && artists.length === 0) || artists.length === 0) {
       return null;
@@ -173,6 +172,11 @@ function App() {
     );
   };
 
+  const clearSearch = () => {
+    setSearchKey("");
+    setSearchSubmitted(false);
+  };
+
   const capitalizeFirstLetter = (str) => {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   };
@@ -188,15 +192,20 @@ function App() {
         {token && <button onClick={logout}>Logout</button>}
         {token ? (
           <form onSubmit={searchArtists} id="search-form">
-            <input type="text" placeholder="Artist Name" name="search" id="search" onChange={(e) => setSearchKey(e.target.value)} />
-            <button type={"submit"}>Search</button>
+            <input type="text" placeholder="Artist Name" name="search" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
+            {searchKey && (
+              <button type="button" onClick={clearSearch}>
+                Clear
+              </button>
+            )}
+            <button type="submit">Search</button>
           </form>
         ) : (
           <button onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}>Login to Spotify</button>
         )}
         {loading ? <p>Loading...</p> : null}
-        {searchSubmitted && <p className="search-results">Showing results for "{searchKey}"</p>}
         {renderArtists()}
+        {searchSubmitted && <ArtistBio searchKey={searchKey} />}
       </section>
     </main>
   );
