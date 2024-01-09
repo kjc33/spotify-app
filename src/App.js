@@ -148,29 +148,39 @@ function App() {
     }
 
     return (
-      <div className="artist" key={artist.id}>
+      <div className="artist-profile" key={artist.id}>
         <div className="artist-image">
-          <img width={"100%"} src={artist.images[0].url} alt="" />
+          <figure>
+            <img width={"100%"} src={artist.images[0].url} alt="" />
+          </figure>
         </div>
-        <h2 className="artist-name">{artist.name}</h2>
-        <p className="followers">
-          <strong>Followers:</strong> {numberWithCommas(artistFollowers)}
-        </p>
-        <p className="genres">
-          <strong>Genres:</strong> {artistGenres}
-        </p>
-        <h3 className="popular-songs">Popular Songs</h3>
-        <div className="popular-songs-list">
-          <ul>
-            {topTracks.slice(0, Math.ceil(topTracks.length / 2)).map((track) => (
-              <li key={track.id}>"{track.name}"</li>
-            ))}
-          </ul>
-          <ul>
-            {topTracks.slice(Math.ceil(topTracks.length / 2)).map((track) => (
-              <li key={track.id}>"{track.name}"</li>
-            ))}
-          </ul>
+        <div className="artist-details">
+          <h2 className="artist-name">{artist.name}</h2>
+          <div className="genres">
+            <p>
+              <strong>Genres:</strong> {artistGenres}
+            </p>
+          </div>
+          <div className="followers">
+            <p>
+              <strong>Followers:</strong> {numberWithCommas(artistFollowers)}
+            </p>
+          </div>
+          <div className="popular-songs">
+            <h3>Popular Songs</h3>
+            <div className="popular-songs-list">
+              <ul>
+                {topTracks.slice(0, Math.ceil(topTracks.length / 2)).map((track) => (
+                  <li key={track.id}>"{track.name}"</li>
+                ))}
+              </ul>
+              <ul>
+                {topTracks.slice(Math.ceil(topTracks.length / 2)).map((track) => (
+                  <li key={track.id}>"{track.name}"</li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -186,9 +196,9 @@ function App() {
 
   return (
     <main>
-      <section>
+      {token && <button onClick={logout}>Logout</button>}
+      <section className="artist-search">
         <h1>Artist Search</h1>
-        {token && <button onClick={logout}>Logout</button>}
         {token ? (
           <form onSubmit={searchArtists} id="search-form">
             <div className="search-container">
@@ -204,6 +214,8 @@ function App() {
         ) : (
           <button onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}>Login to Spotify</button>
         )}
+      </section>
+      <section className="search-results">
         {loading ? <p>Loading...</p> : null}
         {renderArtists()}
         {searchSubmitted && <ArtistBio searchKey={searchKey} />}
