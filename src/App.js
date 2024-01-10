@@ -172,11 +172,6 @@ function App() {
     );
   };
 
-  const clearSearch = () => {
-    setSearchKey("");
-    setSearchSubmitted(false);
-  };
-
   const capitalizeFirstLetter = (str) => {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   };
@@ -192,16 +187,20 @@ function App() {
         {token && <button onClick={logout}>Logout</button>}
         {token ? (
           <form onSubmit={searchArtists} id="search-form">
-            <input type="text" placeholder="Artist Name" name="search" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
-            {searchKey && (
-              <button type="button" onClick={clearSearch}>
-                Clear
-              </button>
-            )}
+            <input
+              type="text"
+              placeholder="Artist Name"
+              name="search"
+              id="search"
+              value={searchKey}
+              onChange={(e) => setSearchKey(e.target.value)}
+            />
             <button type="submit">Search</button>
           </form>
         ) : (
-          <button onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}>Login to Spotify</button>
+          <button onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}>
+            Login to Spotify
+          </button>
         )}
         {loading ? <p>Loading...</p> : null}
         {renderArtists()}
