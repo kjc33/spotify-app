@@ -7,6 +7,8 @@ import SearchForm from "./components/SearchForm";
 import SearchResults from "./components/SearchResults";
 import ArtistBio from "./components/ArtistBio";
 
+import refreshAccessToken from "./utils/RefreshAccessToken";
+
 function App() {
 
   const [token, setToken] = useState("");
@@ -36,6 +38,36 @@ function App() {
     setToken(token);
   }, []);
 
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      const storedToken = window.localStorage.getItem("token");
+      const tokenExpirationTime = window.localStorage.getItem("tokenExpirationTime");
+  
+      if (storedToken && tokenExpirationTime) {
+        const now = new Date().getTime();
+        const expirationTime = parseInt(tokenExpirationTime, 10);
+  
+        const isTokenExpired = now > expirationTime;
+  
+        if (isTokenExpired) {
+          refreshAccessToken(storedToken).then((newToken) => {
+            setToken(newToken);
+  
+            // Update token expiration time in local storage
+            const newExpirationTime = now + 3600; // Set the expiration duration in milliseconds
+            window.localStorage.setItem("tokenExpirationTime", newExpirationTime.toString());
+          }).catch((error) => {
+            console.error('Failed to refresh access token:', error);
+            // Handle error appropriately (e.g., redirect to login)
+          });
+        }
+      }
+    };
+  
+    // Call the checkTokenExpiration function
+    checkTokenExpiration();
+  }, []); // Add other dependencies as needed
+  
   const logout = () => {
     setToken("");
     setSearchKey("");
