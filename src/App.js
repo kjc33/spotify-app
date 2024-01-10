@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "./App.css";
 
-import Header from "./components/Header";
-import SearchForm from "./components/SearchForm";
-import SearchResults from "./components/SearchResults";
 import ArtistBio from "./components/ArtistBio";
 
-import refreshAccessToken from "./utils/RefreshAccessToken";
-
 function App() {
+  const CLIENT_ID = "2ee310db67664234992f32fce570ff74";
+  const REDIRECT_URI = "http://localhost:3000";
+  const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
+  const RESPONSE_TYPE = "token";
 
   const [token, setToken] = useState("");
   const [searchKey, setSearchKey] = useState("");
@@ -38,47 +36,12 @@ function App() {
     setToken(token);
   }, []);
 
-  useEffect(() => {
-    const checkTokenExpiration = () => {
-      const storedToken = window.localStorage.getItem("token");
-      const tokenExpirationTime = window.localStorage.getItem("tokenExpirationTime");
-  
-      if (storedToken && tokenExpirationTime) {
-        const now = new Date().getTime();
-        const expirationTime = parseInt(tokenExpirationTime, 10);
-  
-        const isTokenExpired = now > expirationTime;
-  
-        if (isTokenExpired) {
-          refreshAccessToken(storedToken).then((newToken) => {
-            setToken(newToken);
-  
-            // Update token expiration time in local storage
-            const newExpirationTime = now + 3600; // Set the expiration duration in milliseconds
-            window.localStorage.setItem("tokenExpirationTime", newExpirationTime.toString());
-          }).catch((error) => {
-            console.error('Failed to refresh access token:', error);
-            // Handle error appropriately (e.g., redirect to login)
-          });
-        }
-      }
-    };
-  
-    // Call the checkTokenExpiration function
-    checkTokenExpiration();
-  }, []); // Add other dependencies as needed
-  
   const logout = () => {
     setToken("");
-    setSearchKey("");
     setArtists([]);
-    setSearchSubmitted(false);
-    window.localStorage.removeItem("token");
-  };
-
-  const clearSearch = () => {
     setSearchKey("");
-    setSearchSubmitted(false);
+    setSearchSubmitted(false); // Reset searchSubmitted state
+    window.localStorage.removeItem("token");
   };
 
   const searchArtists = async (e) => {
@@ -100,6 +63,7 @@ function App() {
 
         setArtists(data.artists.items);
       } else {
+        // Handle the case when the search query is empty
         setArtists([]);
       }
     } catch (error) {
@@ -180,7 +144,7 @@ function App() {
     }
 
     return (
-      <div className="artist" key={artist.id}>
+      <div className="artist-details" key={artist.id}>
         <div className="artist-image">
           <img width={"100%"} src={artist.images[0].url} alt="" />
         </div>
@@ -195,17 +159,22 @@ function App() {
         <div className="popular-songs-list">
           <ul>
             {topTracks.slice(0, Math.ceil(topTracks.length / 2)).map((track) => (
-              <li key={track.id}>"{track.name}"</li>
+              <li key={track.id}>{track.name}</li>
             ))}
           </ul>
           <ul>
             {topTracks.slice(Math.ceil(topTracks.length / 2)).map((track) => (
-              <li key={track.id}>"{track.name}"</li>
+              <li key={track.id}>{track.name}</li>
             ))}
           </ul>
         </div>
       </div>
     );
+  };
+
+  const clearSearch = () => {
+    setSearchKey("");
+    setSearchSubmitted(false);
   };
 
   const capitalizeFirstLetter = (str) => {
@@ -223,14 +192,12 @@ function App() {
         {token && <button onClick={logout}>Logout</button>}
         {token ? (
           <form onSubmit={searchArtists} id="search-form">
-            <div className="search-container">
-              <input type="text" placeholder="Artist Name" name="search" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
-              {searchKey && (
-                <button type="button" onClick={clearSearch}>
-                  X
-                </button>
-              )}
-            </div>
+            <input type="text" placeholder="Artist Name" name="search" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
+            {searchKey && (
+              <button type="button" onClick={clearSearch}>
+                Clear
+              </button>
+            )}
             <button type="submit">Search</button>
           </form>
         ) : (
@@ -238,7 +205,7 @@ function App() {
         )}
         {loading ? <p>Loading...</p> : null}
         {renderArtists()}
-        {searchSubmitted && <ArtistBio searchKey={searchKey} />}
+        {searchSubmitted && <ArtistBio searchKey={searchKey} />} {/* Pass searchKey as a prop */}
       </section>
     </main>
   );
