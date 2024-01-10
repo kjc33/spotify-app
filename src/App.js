@@ -13,11 +13,10 @@ function App() {
   const [searchKey, setSearchKey] = useState("");
   const [artists, setArtists] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [searchSubmitted, setSearchSubmitted] = useState(false);
   const [topTracks, setTopTracks] = useState([]);
   const [artistGenres, setArtistGenres] = useState("");
   const [artistFollowers, setArtistFollowers] = useState(0);
-  const [artistBio, setArtistBio] = useState("");
+  const [artistBio, setArtistBio] = useState("Loading...");
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -41,13 +40,11 @@ function App() {
     setToken("");
     setArtists([]);
     setSearchKey("");
-    setSearchSubmitted(false); // Reset searchSubmitted state
     window.localStorage.removeItem("token");
   };
 
   const searchArtists = async (e) => {
     e.preventDefault();
-    setSearchSubmitted(true);
     setLoading(true);
 
     try {
@@ -69,6 +66,8 @@ function App() {
       }
     } catch (error) {
       console.log("Error searching for artists:", error);
+      // Handle errors more effectively
+      setArtists([]);
     } finally {
       setLoading(false);
     }
@@ -94,6 +93,7 @@ function App() {
           setArtistFollowers(followers.total || 0);
         } catch (error) {
           console.error("Error fetching artist info from Spotify:", error);
+          // Handle errors more effectively
         }
       }
     };
@@ -117,6 +117,7 @@ function App() {
           setTopTracks(data.tracks);
         } catch (error) {
           console.log("Error fetching top tracks:", error);
+          // Handle errors more effectively
         }
       }
     };
@@ -160,12 +161,8 @@ function App() {
   }, [searchKey]);
 
   const renderArtists = () => {
-    if (!searchKey || (!searchSubmitted && artists.length === 0) || artists.length === 0) {
+    if (!searchKey || artists.length === 0) {
       return null;
-    }
-
-    if (artists.length === 0 && searchSubmitted) {
-      return <p>Sorry, no artists found.</p>;
     }
 
     const artist = artists[0];
@@ -255,7 +252,6 @@ function App() {
         </div>
       </div>
       {renderArtists()}
-      {searchSubmitted}
     </main>
   );
 }
