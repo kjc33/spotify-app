@@ -1,16 +1,13 @@
-// App.js
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
 
-import ArtistBio from "./components/ArtistBio";
 import Header from "./components/Header";
+import SearchForm from "./components/SearchForm";
+import SearchResults from "./components/SearchResults";
+import ArtistBio from "./components/ArtistBio";
 
 function App() {
-  const CLIENT_ID = "2ee310db67664234992f32fce570ff74";
-  const REDIRECT_URI = "http://localhost:3000";
-  const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
-  const RESPONSE_TYPE = "token";
 
   const [token, setToken] = useState("");
   const [searchKey, setSearchKey] = useState("");
@@ -38,6 +35,14 @@ function App() {
 
     setToken(token);
   }, []);
+
+  const logout = () => {
+    setToken("");
+    setSearchKey("");
+    setArtists([]);
+    setSearchSubmitted(false);
+    window.localStorage.removeItem("token");
+  };
 
   const clearSearch = () => {
     setSearchKey("");
@@ -74,20 +79,20 @@ function App() {
 
   useEffect(() => {
     const fetchArtistInfo = async () => {
-      if (artists.length > 0 && token) {
+      if (artists.length > 0) {
         try {
           const artistId = artists[0].id;
           const spotifyEndpoint = `https://api.spotify.com/v1/artists/${artistId}`;
-  
+
           const { data } = await axios.get(spotifyEndpoint, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
-  
+
           const genres = data.genres || [];
           const followers = data.followers || {};
-  
+
           setArtistGenres(capitalizeFirstLetter(genres.join(", ")));
           setArtistFollowers(followers.total || 0);
         } catch (error) {
@@ -95,7 +100,7 @@ function App() {
         }
       }
     };
-  
+
     fetchArtistInfo();
   }, [artists, token]);
 
@@ -191,50 +196,9 @@ function App() {
 
   return (
     <main>
-      <Header
-        token={token}
-        logout={() => {
-          setToken("");
-          setSearchKey("");
-          setArtists([]);
-          setSearchSubmitted(false);
-          window.localStorage.removeItem("token");
-        }}
-      />
-      <section className="artist-search">
-        <h1>Artist Search</h1>
-        {token ? (
-          <form onSubmit={searchArtists} id="search-form">
-            <input
-              type="text"
-              placeholder="Artist Name"
-              name="search"
-              id="search"
-              value={searchKey}
-              onChange={(e) => setSearchKey(e.target.value)}
-            />
-            {searchKey && (
-              <button type="button" onClick={clearSearch}>
-                X
-              </button>
-            )}
-            <button type="submit">Search</button>
-          </form>
-        ) : (
-          <button
-            onClick={() =>
-              (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)
-            }
-          >
-            Login to Spotify
-          </button>
-        )}
-      </section>
-      <section className="search-results">
-        {loading ? <p>Loading...</p> : null}
-        {renderArtists()}
-        {searchSubmitted && <ArtistBio searchKey={searchKey} />}
-      </section>
+      <Header token={token} logout={logout} />
+      <SearchForm token={token} searchArtists={searchArtists} searchKey={searchKey} clearSearch={clearSearch} setSearchKey={setSearchKey} />
+      <SearchResults loading={loading} renderArtists={renderArtists} searchSubmitted={searchSubmitted} ArtistBio={ArtistBio} searchKey={searchKey} />
     </main>
   );
 }
