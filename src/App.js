@@ -218,9 +218,9 @@ function App() {
 
   return (
     <main>
-      {token && <button onClick={logout}>Logout</button>}
-      <section className="artist-search">
+      <section>
         <h1>Artist Search</h1>
+        {token && <button onClick={logout}>Logout</button>}
         {token ? (
           <form onSubmit={searchArtists} id="search-form">
             <div className="search-container">
@@ -236,8 +236,6 @@ function App() {
         ) : (
           <button onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}>Login to Spotify</button>
         )}
-      </section>
-      <section className="search-results">
         {loading ? <p>Loading...</p> : null}
         {renderArtists()}
         {searchSubmitted && <ArtistBio searchKey={searchKey} />}

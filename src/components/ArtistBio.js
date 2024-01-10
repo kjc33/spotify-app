@@ -34,7 +34,7 @@ const ArtistBio = (props) => {
   }, [props.searchKey]); // Re-run effect if bandName changes
 
   return (
-    <div className="artist-biography">
+    <div>
       <h2>Biography</h2>
       <p>{bio}</p>
     </div>
