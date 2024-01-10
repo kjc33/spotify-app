@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+REACT_APP_SPOTIFY_CLIENT_ID=2ee310db67664234992f32fce570ff74
+REACT_APP_SPOTIFY_CLIENT_SECRET=ddc764ef02aa40b6bd1ea0283d11a988
