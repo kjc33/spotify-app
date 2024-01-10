@@ -35,7 +35,7 @@ const ArtistBio = (props) => {
 
   return (
     <div className="artist-biography">
-      <h3>Biography</h3>
+      <h2>Biography</h2>
       <p>{bio}</p>
     </div>
   );

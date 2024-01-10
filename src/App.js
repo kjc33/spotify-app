@@ -180,39 +180,29 @@ function App() {
     }
 
     return (
-      <div className="artist-profile" key={artist.id}>
+      <div className="artist" key={artist.id}>
         <div className="artist-image">
-          <figure>
-            <img width={"100%"} src={artist.images[0].url} alt="" />
-          </figure>
+          <img width={"100%"} src={artist.images[0].url} alt="" />
         </div>
-        <div className="artist-details">
-          <h2 className="artist-name">{artist.name}</h2>
-          <div className="genres">
-            <p>
-              <strong>Genres:</strong> {artistGenres}
-            </p>
-          </div>
-          <div className="followers">
-            <p>
-              <strong>Followers:</strong> {numberWithCommas(artistFollowers)}
-            </p>
-          </div>
-          <div className="popular-songs">
-            <h3>Popular Songs</h3>
-            <div className="popular-songs-list">
-              <ul>
-                {topTracks.slice(0, Math.ceil(topTracks.length / 2)).map((track) => (
-                  <li key={track.id}>"{track.name}"</li>
-                ))}
-              </ul>
-              <ul>
-                {topTracks.slice(Math.ceil(topTracks.length / 2)).map((track) => (
-                  <li key={track.id}>"{track.name}"</li>
-                ))}
-              </ul>
-            </div>
-          </div>
+        <h2 className="artist-name">{artist.name}</h2>
+        <p className="followers">
+          <strong>Followers:</strong> {numberWithCommas(artistFollowers)}
+        </p>
+        <p className="genres">
+          <strong>Genres:</strong> {artistGenres}
+        </p>
+        <h3 className="popular-songs">Popular Songs</h3>
+        <div className="popular-songs-list">
+          <ul>
+            {topTracks.slice(0, Math.ceil(topTracks.length / 2)).map((track) => (
+              <li key={track.id}>"{track.name}"</li>
+            ))}
+          </ul>
+          <ul>
+            {topTracks.slice(Math.ceil(topTracks.length / 2)).map((track) => (
+              <li key={track.id}>"{track.name}"</li>
+            ))}
+          </ul>
         </div>
       </div>
     );
@@ -228,9 +218,30 @@ function App() {
 
   return (
     <main>
-      <Header token={token} logout={logout} />
-      <SearchForm token={token} searchArtists={searchArtists} searchKey={searchKey} clearSearch={clearSearch} setSearchKey={setSearchKey} />
-      <SearchResults loading={loading} renderArtists={renderArtists} searchSubmitted={searchSubmitted} ArtistBio={ArtistBio} searchKey={searchKey} />
+      {token && <button onClick={logout}>Logout</button>}
+      <section className="artist-search">
+        <h1>Artist Search</h1>
+        {token ? (
+          <form onSubmit={searchArtists} id="search-form">
+            <div className="search-container">
+              <input type="text" placeholder="Artist Name" name="search" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
+              {searchKey && (
+                <button type="button" onClick={clearSearch}>
+                  X
+                </button>
+              )}
+            </div>
+            <button type="submit">Search</button>
+          </form>
+        ) : (
+          <button onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}>Login to Spotify</button>
+        )}
+      </section>
+      <section className="search-results">
+        {loading ? <p>Loading...</p> : null}
+        {renderArtists()}
+        {searchSubmitted && <ArtistBio searchKey={searchKey} />}
+      </section>
     </main>
   );
 }
