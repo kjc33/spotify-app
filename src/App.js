@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "./App.css";
 
 import ArtistBio from "./components/ArtistBio";
+
+import Logo from "./media/artify-logo-dark.svg"
 
 function App() {
   const CLIENT_ID = "2ee310db67664234992f32fce570ff74";
@@ -233,13 +236,18 @@ function App() {
   return (
     <main>
       <header>
-        <div className="container">
+        <div className="container flex">
+          <div className="logo">
+            <figure>
+              <img src={Logo} alt="Artify Logo" width="216" height="60"/>
+            </figure>
+          </div>
           {token && <button onClick={logout}>Logout</button>}
-          <h1>Artist Search</h1>
         </div>
       </header>
       <div className="search">
         <div className="container">
+          <h1>Artist Search</h1>
           {token ? (
             <form onSubmit={searchArtists} id="search-form">
               <input type="text" placeholder="Artist Name" name="search" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />

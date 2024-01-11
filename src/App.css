@@ -3,3 +3,50 @@
     margin: 0;
     padding: 0;
 }
+
+.flex {
+    display: flex;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.max-width,
+.full-width,
+.small-width,
+.medium-width,
+.large-width,
+.extra-large-width {
+    width: 100%;
+} 
+
+.max-width {
+    max-width: 1600px;
+}
+
+.small-width {
+    max-width: 500px;
+}
+
+.medium-width {
+    max-width: 800px;
+}
+
+.large-width {
+    max-width: 1000px;
+}
+
+.extra-large-width {
+    max-width: 1200px;
+}
+
+/* Header */
+
+header {
+    min-height: 90px;
+}
