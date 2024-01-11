@@ -3,8 +3,10 @@ import axios from "axios";
 import "./App.css";
 
 import ArtistBio from "./components/ArtistBio";
+import CircleButton from "./components/CircleButton";
+import Footer from "./components/Footer";
 
-import Logo from "./media/artify-logo-dark.svg"
+import Logo from "./media/artify-logo-dark.svg";
 
 function App() {
   const CLIENT_ID = "2ee310db67664234992f32fce570ff74";
@@ -235,31 +237,33 @@ function App() {
 
   return (
     <main>
-      <header>
-        <div className="container flex">
+      <header className="primary-header">
+        <div className="container flex space-between extra-small-gap full-width">
           <div className="logo">
             <figure>
-              <img src={Logo} alt="Artify Logo" width="216" height="60"/>
+              <a href="/" rel="noopener"><img src={Logo} alt="Artify Logo" width="90" height="auto"/></a>
             </figure>
           </div>
-          {token && <button onClick={logout}>Logout</button>}
+          {token && <button className="btn" id="logout" onClick={logout}>Logout</button>}
         </div>
       </header>
       <div className="search">
-        <div className="container">
-          <h1>Artist Search</h1>
+        <div className="container flex flex-column large-gap">
+          <h1 className="primary-heading">Artist Search</h1>
+          <h2 className="primary-subhead">Discover the artists you love.</h2>
           {token ? (
             <form onSubmit={searchArtists} id="search-form">
               <input type="text" placeholder="Artist Name" name="search" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
               <button type="submit">Search</button>
             </form>
           ) : (
-            <button onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}>Login to Spotify</button>
+            <CircleButton btnText="Login to Spotify Login to Spotify" onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}></CircleButton>
           )}
           {loading ? <p>Loading...</p> : null}
         </div>
       </div>
       {renderArtists()}
+    <Footer/> 
     </main>
   );
 }
