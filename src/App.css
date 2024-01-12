@@ -47,6 +47,10 @@
   padding: 0 30px 50px 30px;
 }
 
+.artist .container {
+  padding: 50px 30px 0 30px;
+}
+
 .max-width {
   max-width: 1600px;
 }
@@ -87,9 +91,9 @@
 }
 
 .link:hover, .attribution:hover {
-    color: #14746F;
+    color: #036666;
     text-decoration: none;
-    border-bottom: solid 1px #14746F;
+    border-bottom: 0;
 }
 
 button,
@@ -135,7 +139,7 @@ button,
 .circle-btn:hover .arrow {
   transform: scale(1.1);
   transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
-  stroke: #14746F;
+  stroke: #036666;
 }
 
 .arrow {
@@ -167,6 +171,19 @@ header {
   min-height: 64px;
 }
 
+.logout .btn-text {
+  color: #ffffff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding-bottom: 2px;
+  border-bottom: solid 1px #ffffff;
+}
+
+.logout .btn-text:hover {
+  color: #000000;
+  border-bottom: 0;
+}
+
 .primary-heading {
   font-size: 2.5rem;
 }
@@ -174,6 +191,32 @@ header {
 .primary-subhead {
   font-size: 1rem;
   font-weight: 600;
+}
+
+.search-query {
+  width: 100%;
+  max-width: 280px;
+  background-color: #ffffff;
+  border: solid 1px #000000;
+  padding: 12px;
+}
+
+.search-query:focus {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  outline: none;
+}
+
+.search-btn {
+  background-color: #ffffff;
+  border-top: solid 1px #000000;
+  border-right: solid 1px #000000;
+  border-bottom: solid 1px #000000;
+  padding: 12px;
+}
+
+.search-btn:hover {
+  background-color: #036666;
+  color: #ffffff;
 }
 
 footer {
@@ -276,6 +319,9 @@ footer {
   }
   .search .container {
     padding: 0 50px 80px 50px;
+  }
+  .artist .container {
+    padding: 80px 50px 0 50px;
   }
   .primary-heading {
     font-size: 14vw;

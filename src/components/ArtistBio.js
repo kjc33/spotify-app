@@ -4,34 +4,62 @@ const ArtistBio = (props) => {
   const [bio, setBio] = useState("Loading...");
 
   useEffect(() => {
-    const apiUrl = 'https://en.wikipedia.org/w/api.php?';
-    const params = new URLSearchParams({
-      action: 'query',
-      format: 'json',
-      prop: 'extracts',
-      exintro: true,
-      explaintext: true,
-      titles: props.searchKey,
-      redirects: 1, // Handle redirects
-      origin: '*'
-    });
+    const fetchBio = async () => {
+      const apiUrl = "https://en.wikipedia.org/w/api.php?";
+      let searchParam = props.searchKey;
+      
+      const params = new URLSearchParams({
+        action: "query",
+        format: "json",
+        prop: "extracts",
+        exintro: true,
+        explaintext: true,
+        titles: searchParam,
+        redirects: 1,
+        origin: "*",
+      });
 
-    fetch(`${apiUrl}${params}`)
-      .then((response) => response.json())
-      .then((data) => {
+      try {
+        const response = await fetch(`${apiUrl}${params}`);
+        const data = await response.json();
         const pages = data.query.pages;
         const pageId = Object.keys(pages)[0];
+
         if (pageId !== "-1" && pages[pageId].extract) {
           setBio(pages[pageId].extract);
         } else {
-          setBio('Sorry, no biography found.');
+          // Retry with " band" appended to the search parameter
+          searchParam += " band";
+          const retryParams = new URLSearchParams({
+            action: "query",
+            format: "json",
+            prop: "extracts",
+            exintro: true,
+            explaintext: true,
+            titles: searchParam,
+            redirects: 1,
+            origin: "*",
+          });
+
+          const retryResponse = await fetch(`${apiUrl}${retryParams}`);
+          const retryData = await retryResponse.json();
+          const retryPages = retryData.query.pages;
+          const retryPageId = Object.keys(retryPages)[0];
+
+          if (retryPageId !== "-1" && retryPages[retryPageId].extract) {
+            setBio(retryPages[retryPageId].extract);
+          } else {
+            setBio("Sorry, no biography found.");
+          }
         }
-      })
-      .catch((error) => {
-        console.error('Error fetching data: ', error);
-        setBio('Error fetching biography.');
-      });
-  }, [props.searchKey]); // Re-run effect if bandName changes
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+        setBio("Error fetching biography.");
+      }
+    };
+
+    fetchBio();
+  }, [props.searchKey]);
 
   return (
     <>

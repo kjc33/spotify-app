@@ -244,7 +244,7 @@ function App() {
               <a href="/" rel="noopener"><img src={Logo} alt="Artify Logo" width="90" height="auto"/></a>
             </figure>
           </div>
-          {token && <button className="logout-btn" id="logout" onClick={logout}>Logout</button>}
+          {token && <button className="logout" id="logout" onClick={logout}><span className="btn-text">Logout</span></button>}
         </div>
       </header>
       <div className="search">
@@ -253,8 +253,8 @@ function App() {
           <h2 className="primary-subhead">Get to know the artists you love.</h2>
           {token ? (
             <form onSubmit={searchArtists} id="search-form">
-              <input type="text" placeholder="Artist Name" name="search" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
-              <button type="submit">Search</button>
+              <input type="text" placeholder="Artist Name" name="search" className="search-query" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
+              <button type="submit" className="search-btn">Search</button>
             </form>
           ) : (
             <CircleButton btnText="Login to Spotify Login to Spotify" onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}></CircleButton>
