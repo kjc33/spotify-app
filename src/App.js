@@ -244,7 +244,7 @@ function App() {
               <a href="/" rel="noopener"><img src={Logo} alt="Artify Logo" width="90" height="auto"/></a>
             </figure>
           </div>
-          {token && <button className="btn" id="logout" onClick={logout}>Logout</button>}
+          {token && <button className="logout-btn" id="logout" onClick={logout}>Logout</button>}
         </div>
       </header>
       <div className="search">
