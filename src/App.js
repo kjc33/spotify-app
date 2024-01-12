@@ -184,42 +184,53 @@ function App() {
     return (
       <article className="artist" key={artist.id}>
         <div className="container">
-          <div className="artist-image">
-            <figure>
-              <img width={"100%"} src={artist.images[0].url} alt="" />
-            </figure>
-          </div>
-          <div className="artist-details">
-            <div className="artist-name">
-              <h2 className="artist-name">{artist.name}</h2>
-            </div>
-            <div className="genres">
-              <p>
-                <strong>Genres:</strong> {artistGenres}
-              </p>
-            </div>
-            <div className="followers">
-              <p>
-                <strong>Followers:</strong> {numberWithCommas(artistFollowers)}
-              </p>
-            </div>
-            <div className="popular-songs">
-              <h3>Popular Songs</h3>
-              <div className="popular-songs-list">
-                <ul>
-                  {topTracks.slice(0, Math.ceil(topTracks.length / 2)).map((track) => (
-                    <li key={track.id}>{track.name}</li>
-                  ))}
-                </ul>
-                <ul>
-                  {topTracks.slice(Math.ceil(topTracks.length / 2)).map((track) => (
-                    <li key={track.id}>{track.name}</li>
+          <div className="artist-wrapper">
+            <div className="artist-header flex flex-column">
+              <div className="artist-image">
+                <figure>
+                  <img width={"100%"} src={artist.images[0].url} alt={artist.name} />
+                </figure>
+              </div>
+              <div className="artist-name">
+                <h2>{artist.name}</h2>
+              </div>
+              <div className="followers">
+                <p>{numberWithCommas(artistFollowers)} Followers</p>
+              </div>
+              <div className="genres">
+                <ul className="flex tiny-gap flex-wrap">
+                  {artistGenres.split(",").map((genre, index) => (
+                    <li key={index}>{genre.trim()}</li>
                   ))}
                 </ul>
               </div>
             </div>
-            <div className="biography">
-              <ArtistBio searchKey={searchKey} />
+            <div className="artist-body">
+              <div className="line-divider"></div>
+              <div className="biography">
+                <ArtistBio searchKey={searchKey} />
+              </div>
+              <div className="popular-songs">
+                <h3>Popular Songs</h3>
+                <div className="popular-songs-list">
+                  <ul className="top-row">
+                    {topTracks.slice(0, 5).map((track, index) => (
+                      <li key={track.id}>
+                        <span className="track-number">{index + 1}</span>
+                        <span className="track-name"> "{track.name}"</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <ul className="bottom-row">
+                    {topTracks.slice(5, 10).map((track, index) => (
+                      <li key={track.id}>
+                        <span className="track-number">{index + 6}</span>
+                        <span className="track-name"> "{track.name}"</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -241,10 +252,16 @@ function App() {
         <div className="container flex space-between extra-small-gap full-width">
           <div className="logo">
             <figure>
-              <a href="/" rel="noopener"><img src={Logo} alt="Artify Logo" width="90" height="auto"/></a>
+              <a href="/" rel="noopener">
+                <img src={Logo} alt="Artify Logo" width="90" height="auto" />
+              </a>
             </figure>
           </div>
-          {token && <button className="logout" id="logout" onClick={logout}><span className="btn-text">Logout</span></button>}
+          {token && (
+            <button className="logout" id="logout" onClick={logout}>
+              <span className="btn-text">Logout</span>
+            </button>
+          )}
         </div>
       </header>
       <div className="search">
@@ -254,7 +271,9 @@ function App() {
           {token ? (
             <form onSubmit={searchArtists} id="search-form">
               <input type="text" placeholder="Artist Name" name="search" className="search-query" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
-              <button type="submit" className="search-btn">Search</button>
+              <button type="submit" className="search-btn">
+                Search
+              </button>
             </form>
           ) : (
             <CircleButton btnText="Login to Spotify Login to Spotify" onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}></CircleButton>
@@ -263,7 +282,7 @@ function App() {
         </div>
       </div>
       {renderArtists()}
-    <Footer/> 
+      <Footer />
     </main>
   );
 }

@@ -75,6 +75,10 @@
   gap: 20px;
 }
 
+.tiny-gap {
+  gap: 10px;
+}
+
 .small-gap,
 .search .large-gap {
   gap: 30px;
@@ -193,10 +197,14 @@ header {
   font-weight: 600;
 }
 
-.search-query {
+h3 {
+  padding-bottom: 30px;
+}
+
+.search .container .search-query {
   width: 100%;
   max-width: 280px;
-  background-color: #ffffff;
+  background-color: #ffffff!important;
   border: solid 1px #000000;
   padding: 12px;
 }
@@ -204,6 +212,11 @@ header {
 .search-query:focus {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   outline: none;
+}
+
+.search-query:active,
+input:-internal-autofill-selected {
+  background-color: #ffffff!important;
 }
 
 .search-btn {
@@ -217,6 +230,104 @@ header {
 .search-btn:hover {
   background-color: #036666;
   color: #ffffff;
+}
+
+.artist .container {
+  position: relative;
+}
+
+.artist-header {
+  min-height: 506px;
+}
+
+.artist-image img {
+  position: absolute;
+  top: -50px;
+  right: 12.5%;
+  width: 100%;
+  border: solid 4px #000000;
+}
+
+.artist-name,
+.followers,
+.genres {
+  width: 50%;
+}
+
+.artist-name h2 {
+  font-size: 6rem;
+  padding-bottom: 30px;
+}
+
+.followers p {
+  color: #888888;
+  font-weight: 300;
+}
+
+.genres {
+  margin-top: auto;
+}
+
+.line-divider {
+  border-bottom: 1px solid #000000;
+  margin: 80px 0;
+}
+
+.genres ul,
+.popular-songs-list .top-row,
+.popular-songs-list .bottom-row {
+  list-style-type: none;
+}
+
+.genres li {
+  display: inline-block;
+  background-color: #036666;
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 50px;
+}
+
+.biography {
+  padding-bottom: 80px;
+}
+
+.biography p {
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.popular-songs-list li {
+  position: relative;
+  display: flex;
+  min-height: 300px;
+  background-color: #f3f3f3;
+  padding: 30px;
+  clip-path: polygon(100% 0, 100% 85%, 85% 100%, 0 100%, 0 0);
+}
+
+.popular-songs-list .top-row,
+.popular-songs-list .bottom-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);;
+  gap: 20px;
+  width: 100%;
+}
+
+.popular-songs-list .top-row li {
+  margin-bottom: 20px;
+}
+
+.track-number {
+  position: absolute;
+  left: 30px;
+  bottom: 30px;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #036666;
+}
+
+.track-name {
+  line-height: 1.5;
 }
 
 footer {
@@ -302,9 +413,6 @@ footer {
     font-size: 14.5vw;
     white-space: nowrap;
   }
-  .primary-subhead {
-    font-size: 2rem;
-  }
   .search .large-gap {
     gap: 50px;
   }
@@ -323,12 +431,12 @@ footer {
   .artist .container {
     padding: 80px 50px 0 50px;
   }
+  .artist-image img {
+    width: 25%;
+  }  
   .primary-heading {
     font-size: 14vw;
     white-space: nowrap;
-  }
-  .primary-subhead {
-    font-size: 2.5rem;
   }
 }
 
