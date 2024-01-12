@@ -250,7 +250,7 @@ function App() {
       <div className="search">
         <div className="container flex flex-column large-gap">
           <h1 className="primary-heading">Artist Search</h1>
-          <h2 className="primary-subhead">Discover the artists you love.</h2>
+          <h2 className="primary-subhead">Get to know the artists you love.</h2>
           {token ? (
             <form onSubmit={searchArtists} id="search-form">
               <input type="text" placeholder="Artist Name" name="search" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />

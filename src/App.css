@@ -21,6 +21,10 @@
   justify-content: space-between;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .max-width,
 .full-width,
 .small-width,
@@ -131,7 +135,7 @@ button,
 .circle-btn:hover .arrow {
   transform: scale(1.1);
   transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
-  stroke: #248277;
+  stroke: #14746F;
 }
 
 .arrow {
@@ -176,8 +180,12 @@ footer {
   background-color: #ffffff;
 }
 
-.pipe {
-  padding: 0 5px;
+.footer-signature {
+  line-height: 1.5;
+}
+
+.footer-wrapper.flex.flex-row {
+  flex-direction: column;
 }
 
 /* Media Queries */
@@ -240,6 +248,9 @@ footer {
     font: 600 1.25rem/1.4 "Figtree", sans-serif;
     letter-spacing: 0.01em;
     word-spacing: 0.89em;
+  }
+  .footer-wrapper.flex.flex-row {
+    flex-direction: row;
   }
 }
 
