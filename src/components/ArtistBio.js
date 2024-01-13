@@ -13,6 +13,7 @@ const ArtistBio = ({ bio, setArtistBio, artistName }) => {
         exintro: true,
         explaintext: true,
         titles: searchParam,
+        srsearch: "musical band",
         redirects: 1,
         origin: "*",
       });
