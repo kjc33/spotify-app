@@ -9,20 +9,20 @@ import Footer from "./components/Footer";
 import Logo from "./media/artify-logo-dark.svg";
 
 function App() {
-  const CLIENT_ID = "2ee310db67664234992f32fce570ff74";
-  const REDIRECT_URI = "http://localhost:3000";
-  const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
-  const RESPONSE_TYPE = "token";
+ const CLIENT_ID = "2ee310db67664234992f32fce570ff74";
+ const REDIRECT_URI = "http://localhost:3000";
+ const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
+ const RESPONSE_TYPE = "token";
 
-  const [token, setToken] = useState("");
-  const [searchKey, setSearchKey] = useState("");
-  const [artists, setArtists] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [topTracks, setTopTracks] = useState([]);
-  const [artistGenres, setArtistGenres] = useState("");
-  const [artistFollowers, setArtistFollowers] = useState(0);
-  const [artistBio, setArtistBio] = useState("Loading...");
-  const [showMessage, setShowMessage] = useState(false);
+ const [token, setToken] = useState("");
+ const [searchKey, setSearchKey] = useState("");
+ const [artists, setArtists] = useState([]);
+ const [loading, setLoading] = useState(false);
+ const [topTracks, setTopTracks] = useState([]);
+ const [artistGenres, setArtistGenres] = useState("");
+ const [artistFollowers, setArtistFollowers] = useState(0);
+ const [artistBio, setArtistBio] = useState("Loading...");
+ const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -221,7 +221,7 @@ function App() {
             <div className="artist-body">
               <div className="line-divider"></div>
               <div className="biography">
-                <ArtistBio searchKey={searchKey} />
+              <ArtistBio bio={artistBio} setArtistBio={setArtistBio} artistName={searchKey} />
               </div>
               <div className="popular-songs">
                 <h3>Popular Songs</h3>
