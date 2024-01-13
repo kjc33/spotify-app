@@ -186,23 +186,31 @@ function App() {
         <div className="container">
           <div className="artist-wrapper">
             <div className="artist-header flex flex-column">
-              <div className="artist-image">
-                <figure>
-                  <img width={"100%"} src={artist.images[0].url} alt={artist.name} />
-                </figure>
+              <div className="artist-header-left-col artist-profile-img">
+                <div className="artist-image">
+                  <figure>
+                    <img width={"100%"} src={artist.images[0].url} alt={artist.name} />
+                  </figure>
+                </div>
               </div>
-              <div className="artist-name">
-                <h2>{artist.name}</h2>
+
+              <div className="artist-header-right-col artist-profile-name">
+                <div className="artist-name">
+                  <h2>{artist.name}</h2>
+                </div>
+                <div className="followers">
+                  <p>{numberWithCommas(artistFollowers)} Followers</p>
+                </div>
               </div>
-              <div className="followers">
-                <p>{numberWithCommas(artistFollowers)} Followers</p>
-              </div>
-              <div className="genres">
-                <ul className="flex tiny-gap flex-wrap">
-                  {artistGenres.split(",").map((genre, index) => (
-                    <li key={index}>{genre.trim()}</li>
-                  ))}
-                </ul>
+
+              <div className="artist-header-bottom artist-genres">
+                <div className="genres">
+                  <ul className="flex tiny-gap flex-wrap">
+                    {artistGenres.split(",").map((genre, index) => (
+                      <li key={index}>{genre.trim()}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
             <div className="artist-body">
@@ -213,18 +221,10 @@ function App() {
               <div className="popular-songs">
                 <h3>Popular Songs</h3>
                 <div className="popular-songs-list">
-                  <ul className="top-row">
-                    {topTracks.slice(0, 5).map((track, index) => (
+                  <ul className="songs-list">
+                    {topTracks.slice(0, 10).map((track, index) => (
                       <li key={track.id}>
                         <span className="track-number">{index + 1}</span>
-                        <span className="track-name"> "{track.name}"</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <ul className="bottom-row">
-                    {topTracks.slice(5, 10).map((track, index) => (
-                      <li key={track.id}>
-                        <span className="track-number">{index + 6}</span>
                         <span className="track-name"> "{track.name}"</span>
                       </li>
                     ))}
@@ -264,12 +264,12 @@ function App() {
           )}
         </div>
       </header>
-      <div className="search">
-        <div className="container flex flex-column large-gap">
+      <div className="search" id="search">
+        <div className={`container container flex flex-column large-gap ${artists.length > 0 ? "search-results" : ""}`}>
           <h1 className="primary-heading">Artist Search</h1>
           <h2 className="primary-subhead">Get to know the artists you love.</h2>
           {token ? (
-            <form onSubmit={searchArtists} id="search-form">
+            <form onSubmit={searchArtists} id="search-form" className="artist-search flex flex-wrap">
               <input type="text" placeholder="Artist Name" name="search" className="search-query" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
               <button type="submit" className="search-btn">
                 Search
