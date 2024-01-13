@@ -10,7 +10,7 @@ import Logo from "./media/artify-logo-dark.svg";
 
 function App() {
  const CLIENT_ID = "2ee310db67664234992f32fce570ff74";
- const REDIRECT_URI = "http://localhost:3000";
+ const REDIRECT_URI = "https://spotify-artist-search-app.netlify.app/";
  const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
  const RESPONSE_TYPE = "token";
 
