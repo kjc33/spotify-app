@@ -22,6 +22,7 @@ function App() {
   const [artistGenres, setArtistGenres] = useState("");
   const [artistFollowers, setArtistFollowers] = useState(0);
   const [artistBio, setArtistBio] = useState("Loading...");
+  const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -45,6 +46,7 @@ function App() {
     setToken("");
     setArtists([]);
     setSearchKey("");
+    setShowMessage(false);
     window.localStorage.removeItem("token");
   };
 
@@ -64,15 +66,20 @@ function App() {
           },
         });
 
+        if (data.artists.items.length === 0) {
+          setShowMessage(true);
+        } else {
+          setShowMessage(false);
+        }
         setArtists(data.artists.items);
       } else {
-        // Handle the case when the search query is empty
         setArtists([]);
+        setShowMessage(false);
       }
     } catch (error) {
       console.log("Error searching for artists:", error);
-      // Handle errors more effectively
       setArtists([]);
+      setShowMessage(false);
     } finally {
       setLoading(false);
     }
@@ -193,7 +200,6 @@ function App() {
                   </figure>
                 </div>
               </div>
-
               <div className="artist-header-right-col artist-profile-name">
                 <div className="artist-name">
                   <h2>{artist.name}</h2>
@@ -202,7 +208,6 @@ function App() {
                   <p>{numberWithCommas(artistFollowers)} Followers</p>
                 </div>
               </div>
-
               <div className="artist-header-bottom artist-genres">
                 <div className="genres">
                   <ul className="flex tiny-gap flex-wrap">
@@ -230,6 +235,7 @@ function App() {
                     ))}
                   </ul>
                 </div>
+                <div className="back-to-top"><a href="#search">Back to Top</a></div>
               </div>
             </div>
           </div>
@@ -269,12 +275,19 @@ function App() {
           <h1 className="primary-heading">Artist Search</h1>
           <h2 className="primary-subhead">Get to know the artists you love.</h2>
           {token ? (
-            <form onSubmit={searchArtists} id="search-form" className="artist-search flex flex-wrap">
-              <input type="text" placeholder="Artist Name" name="search" className="search-query" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
-              <button type="submit" className="search-btn">
-                Search
-              </button>
-            </form>
+            <div className="artist-search-form">
+              <form onSubmit={searchArtists} id="search-form" className="artist-search flex">
+                <input type="text" placeholder="Artist Name" name="search" className="search-query" id="search" value={searchKey} onChange={(e) => setSearchKey(e.target.value)} />
+                {searchKey && (
+                  <button type="button" className="clear-btn" onClick={() => setSearchKey("")}>
+                    X
+                  </button>
+                )}
+                <button type="submit" className="search-btn">
+                  Search
+                </button>
+              </form>
+            </div>
           ) : (
             <CircleButton btnText="Login to Spotify Login to Spotify" onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}></CircleButton>
           )}
@@ -282,6 +295,11 @@ function App() {
         </div>
       </div>
       {renderArtists()}
+      {showMessage && (
+        <div className="container">
+          <p>Sorry, no artists found.</p>
+        </div>
+      )}
       <Footer />
     </main>
   );
