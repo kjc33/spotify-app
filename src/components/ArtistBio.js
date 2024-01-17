@@ -5,7 +5,7 @@ const ArtistBio = ({ bio, setArtistBio, artistName }) => {
     const fetchBio = async () => {
       const apiUrl = "https://en.wikipedia.org/w/api.php?";
       let searchParam = artistName;
-      searchParam += " band";
+      const keywords = ["band", "group", "musician", "guitarist", "bassist", "drummer", "singer", "songwriter"];
 
       const params = new URLSearchParams({
         action: "query",
@@ -24,7 +24,7 @@ const ArtistBio = ({ bio, setArtistBio, artistName }) => {
         const pages = data.query.pages;
         const pageId = Object.keys(pages)[0];
 
-        if (pageId !== "-1" && pages[pageId].extract) {
+        if (pageId !== "-1" && pages[pageId].extract && keywords.some((keyword) => pages[pageId].extract.includes(keyword))) {
           setArtistBio(pages[pageId].extract);
         } else {
           // Retry with " band" appended to the search parameter
@@ -45,7 +45,7 @@ const ArtistBio = ({ bio, setArtistBio, artistName }) => {
           const retryPages = retryData.query.pages;
           const retryPageId = Object.keys(retryPages)[0];
 
-          if (retryPageId !== "-1" && retryPages[retryPageId].extract) {
+          if (retryPageId !== "-1" && retryPages[retryPageId].extract && keywords.some((keyword) => retryPages[retryPageId].extract.includes(keyword))) {
             setArtistBio(retryPages[retryPageId].extract);
           } else {
             setArtistBio("Sorry, no biography found.");
