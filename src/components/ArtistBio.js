@@ -24,7 +24,7 @@ const ArtistBio = ({ bio, setArtistBio, artistName }) => {
     const pages = data.query.pages;
     const pageId = Object.keys(pages)[0];
    
-    if (pageId !== "-1" && pages[pageId].extract && keywords.some((keyword) => (pages[pageId].extract.match(new RegExp(keyword, "gi")) || []).length >= 2)) {
+    if (pageId !== "-1" && pages[pageId].extract && keywords.some((keyword) => (pages[pageId].extract.match(new RegExp(keyword, "gi")) || []).length >= 1)) {
     setArtistBio(pages[pageId].extract);
     } else {
     // Retry with " band" appended to the search parameter
