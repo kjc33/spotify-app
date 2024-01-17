@@ -1,70 +1,62 @@
 import React, { useEffect } from "react";
 
 const ArtistBio = ({ bio, setArtistBio, artistName }) => {
-  useEffect(() => {
-    const fetchBio = async () => {
-      const apiUrl = "https://en.wikipedia.org/w/api.php?";
-      let searchParam = artistName;
+ useEffect(() => {
+   const fetchBio = async () => {
+     const mbApiUrl = "https://musicbrainz.org/ws/2/";
+     let searchParam = artistName;
 
-      const params = new URLSearchParams({
-        action: "query",
-        format: "json",
-        prop: "extracts",
-        exintro: true,
-        explaintext: true,
-        titles: searchParam,
-        redirects: 1,
-        origin: "*",
-      });
+     // First, search for the artist to get their MBID
+     const searchParams = new URLSearchParams({
+       fmt: "json",
+       query: `artist:"${searchParam}"`,
+       dismax: "true",
+       limit: "1",
+     });
 
-      try {
-        const response = await fetch(`${apiUrl}${params}`);
-        const data = await response.json();
-        const pages = data.query.pages;
-        const pageId = Object.keys(pages)[0];
+     try {
+       const response = await fetch(`${mbApiUrl}artist/?${searchParams}`, {
+         headers: {
+           'User-Agent': 'Music Database App/1.0 ( kylejohnchin33@gmail.com )',
+         },
+       });
+       const data = await response.json();
+       const artist = data.artists[0];
 
-        if (pageId !== "-1" && pages[pageId].extract) {
-          setArtistBio(pages[pageId].extract);
-        } else {
-          // Retry with " band" appended to the search parameter
-          searchParam += " band";
-          const retryParams = new URLSearchParams({
-            action: "query",
-            format: "json",
-            prop: "extracts",
-            exintro: true,
-            explaintext: true,
-            titles: searchParam,
-            redirects: 1,
-            origin: "*",
-          });
+       // Then, use the artist's MBID to fetch their details
+       const detailParams = new URLSearchParams({
+         fmt: "json",
+         inc: "url-rels+annotation",
+       });
 
-          const retryResponse = await fetch(`${apiUrl}${retryParams}`);
-          const retryData = await retryResponse.json();
-          const retryPages = retryData.query.pages;
-          const retryPageId = Object.keys(retryPages)[0];
+       const detailResponse = await fetch(`${mbApiUrl}artist/${artist.id}?${detailParams}`, {
+         headers: {
+           'User-Agent': 'Music Database App/1.0 ( kylejohnchin33@gmail.com )',
+         },
+       });
+       const detailData = await detailResponse.json();
+       const annotation = detailData.artist.annotation;
 
-          if (retryPageId !== "-1" && retryPages[retryPageId].extract) {
-            setArtistBio(retryPages[retryPageId].extract);
-          } else {
-            setArtistBio("Sorry, no biography found.");
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-        setArtistBio("Error fetching biography.");
-      }
-    };
+       if (annotation) {
+         setArtistBio(annotation.summary);
+       } else {
+         setArtistBio("Sorry, no biography found.");
+       }
+     } catch (error) {
+       console.error("Error fetching data: ", error);
+       setArtistBio("Error fetching biography.");
+     }
+   };
 
-    fetchBio();
-  }, [artistName, setArtistBio]);
+   fetchBio();
+ }, [artistName, setArtistBio]);
 
-  return (
-    <>
-      <h3>Biography</h3>
-      <p>{bio}</p>
-    </>
-  );
+ return (
+   <>
+     <h3>Biography</h3>
+     <p>{bio}</p>
+   </>
+ );
 };
 
 export default ArtistBio;
