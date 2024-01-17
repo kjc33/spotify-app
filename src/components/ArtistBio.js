@@ -7,6 +7,7 @@ const ArtistBio = ({ bio, setArtistBio, artistName }) => {
       let searchParam = artistName;
       searchParam += " band";
 
+      // Perform the first search
       const params = new URLSearchParams({
         action: "query",
         format: "json",
@@ -27,8 +28,8 @@ const ArtistBio = ({ bio, setArtistBio, artistName }) => {
         if (pageId !== "-1" && pages[pageId].extract) {
           setArtistBio(pages[pageId].extract);
         } else {
-          // Retry with " band" appended to the search parameter
-          searchParam += " band";
+          // Perform the second search if the first search failed
+          searchParam = artistName + " band";
           const retryParams = new URLSearchParams({
             action: "query",
             format: "json",
