@@ -5,7 +5,7 @@ const ArtistBio = ({ bio, setArtistBio, artistName }) => {
     const fetchBio = async () => {
       const apiUrl = "https://en.wikipedia.org/w/api.php?";
       let searchParam = artistName;
-      searchParam += " band";
+      searchParam += " (band)";
 
       const params = new URLSearchParams({
         action: "query",
@@ -28,7 +28,7 @@ const ArtistBio = ({ bio, setArtistBio, artistName }) => {
           setArtistBio(pages[pageId].extract);
         } else {
           // Retry with " band" appended to the search parameter
-          searchParam += " band";
+          searchParam += " (band)";
           const retryParams = new URLSearchParams({
             action: "query",
             format: "json",
