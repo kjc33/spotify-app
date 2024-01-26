@@ -3,11 +3,9 @@ import axios from "axios";
 import "./App.css";
 
 import ArtistDetails from "./components/ArtistDetails";
-import CircleButton from "./components/CircleButton";
 import Footer from "./components/Footer";
-import SearchForm from "./components/SearchForm";
-
-import Logo from "./media/artify-logo-dark.svg";
+import Hero from "./Hero";
+import Header from "./Header";
 
 function App() {
   const CLIENT_ID = "2ee310db67664234992f32fce570ff74";
@@ -49,41 +47,6 @@ function App() {
     setSearchKey("");
     setShowMessage(false);
     window.localStorage.removeItem("token");
-  };
-
-  const searchArtists = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      if (searchKey.trim() !== "") {
-        const { data } = await axios.get("https://api.spotify.com/v1/search", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            q: searchKey,
-            type: "artist",
-          },
-        });
-
-        if (data.artists.items.length === 0) {
-          setShowMessage(true);
-        } else {
-          setShowMessage(false);
-        }
-        setArtists(data.artists.items);
-      } else {
-        setArtists([]);
-        setShowMessage(false);
-      }
-    } catch (error) {
-      console.log("Error searching for artists:", error);
-      setArtists([]);
-      setShowMessage(false);
-    } finally {
-      setLoading(false);
-    }
   };
 
   useEffect(() => {
@@ -173,14 +136,6 @@ function App() {
     fetchArtistBio();
   }, [searchKey]);
 
-  const renderArtists = () => {
-    if (!searchKey || artists.length === 0) {
-      return null;
-    }
-
-    return <ArtistDetails artist={artists[0]} artistFollowers={artistFollowers} artistGenres={artistGenres} topTracks={topTracks} />;
-  };
-
   const capitalizeFirstLetter = (str) => {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   };
@@ -189,38 +144,18 @@ function App() {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  const renderArtists = () => {
+    if (!searchKey || artists.length === 0) {
+      return null;
+    }
+
+    return <ArtistDetails artist={artists[0]} artistFollowers={artistFollowers} artistGenres={artistGenres} topTracks={topTracks} />;
+  };
+
   return (
     <main>
-      <header className="primary-header">
-        <div className="container flex space-between extra-small-gap full-width">
-          <div className="logo">
-            <figure>
-              <a href="/" rel="noopener">
-                <img src={Logo} alt="Artify Logo" width="90" height="auto" />
-              </a>
-            </figure>
-          </div>
-          {token && (
-            <button className="logout" id="logout" onClick={logout}>
-              <span className="btn-text">Logout</span>
-            </button>
-          )}
-        </div>
-      </header>
-      <div className="search" id="search">
-        <div className={`container container flex flex-column large-gap ${artists.length > 0 ? "search-results" : ""}`}>
-          <h1 className="primary-heading">Artist Search</h1>
-          <h2 className="primary-subhead">Get to know the artists you love.</h2>
-          {token ? (
-            <div className="artist-search-form">
-              <SearchForm searchKey={searchKey} setSearchKey={setSearchKey} />
-            </div>
-          ) : (
-            <CircleButton btnText="Login to Spotify Login to Spotify" onClick={() => (window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`)}></CircleButton>
-          )}
-          {loading ? <p>Loading...</p> : null}
-        </div>
-      </div>
+      <Header token={token} logout={logout} />
+      <Hero token={token} searchKey={searchKey} setSearchKey={setSearchKey} loading={loading} setLoading={setLoading} setArtists={setArtists} setShowMessage={setShowMessage} />
       {renderArtists()}
       {showMessage && (
         <div className="container">

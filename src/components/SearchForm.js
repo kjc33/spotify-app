@@ -1,4 +1,3 @@
-// SearchForm.js
 import React from "react";
 
 function SearchForm({ searchKey, setSearchKey }) {
