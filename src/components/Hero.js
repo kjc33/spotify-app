@@ -4,9 +4,9 @@ import CircleButton from "./components/CircleButton";
 import axios from "axios";
 
 const Hero = ({ token, searchKey, setSearchKey, loading, setLoading, setArtists, setShowMessage }) => {
-  const CLIENT_ID = "2ee310db67664234992f32fce570ff74";
-  const REDIRECT_URI = "https://spotify-artist-search-app.netlify.app/";
-  const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
+  const CLIENT_ID = process.env.REACT_APP_API_CLIENT_ID;
+  const REDIRECT_URI = process.env.REACT_APP_API_URI;
+  const AUTH_ENDPOINT = process.env.REACT_APP_API_AUTH_ENDPOINT;
   const RESPONSE_TYPE = "token";
 
   const searchArtists = async (e) => {
