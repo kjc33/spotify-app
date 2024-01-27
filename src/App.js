@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
 
+require('dotenv').config()
+
 import ArtistDetails from "./components/ArtistDetails";
 import Footer from "./components/Footer";
 import Hero from "./Hero";
